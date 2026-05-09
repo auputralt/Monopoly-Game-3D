@@ -1,0 +1,232 @@
+/* ========================================
+   MONOPOLY INDONESIA 3D — STYLESHEET
+   ======================================== */
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+    --bg:        #0a0e14;
+    --surface:   #141a24;
+    --surface2:  #1c2433;
+    --border:    #2a3444;
+    --red:       #c41e3a;
+    --gold:      #f0c040;
+    --green:     #1a8a4a;
+    --text:      #f0ece4;
+    --muted:     #7a8599;
+    --radius:    8px;
+    --font-dis:  'Playfair Display', Georgia, serif;
+    --font-body: 'DM Sans', 'Segoe UI', sans-serif;
+}
+
+html, body {
+    height:100%;
+    overflow:hidden;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:14px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============ SELECTION SCREEN ============ */
+#selection-screen {
+    position:fixed; inset:0; z-index:100;
+    display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(135deg, #0a1628 0%, #13271a 50%, #1a0e08 100%);
+}
+
+.sel-bg-pattern { position:absolute; inset:0; opacity:.06; background-image: repeating-linear-gradient(45deg, transparent, transparent 40px, #f0c040 40px, #f0c040 41px); pointer-events:none; }
+
+.sel-container { position:relative; z-index:1; width:580px; max-width:95vw; max-height:92vh; overflow-y:auto; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:36px 32px; text-align:center; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+
+.sel-header { margin-bottom:28px; }
+.sel-title { font-family:var(--font-dis); font-size:52px; font-weight:900; color:var(--gold); letter-spacing:6px; line-height:1; text-shadow:0 2px 20px rgba(240,192,64,.3); }
+.sel-subtitle { font-family:var(--font-dis); font-size:20px; font-weight:700; color:var(--red); letter-spacing:14px; margin-top:4px; }
+.sel-tagline { color:var(--muted); margin-top:8px; font-size:13px; }
+
+.sel-count-row { display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:24px; }
+.sel-label { font-weight:700; color:var(--muted); text-transform:uppercase; font-size:12px; letter-spacing:2px; }
+.count-btns { display:flex; gap:6px; }
+.count-btn { width:40px; height:40px; border-radius:var(--radius); border:2px solid var(--border); background:transparent; color:var(--text); font-size:16px; font-weight:700; cursor:pointer; transition:all .2s; }
+.count-btn:hover { border-color:var(--gold); color:var(--gold); }
+.count-btn.active { background:var(--gold); color:#000; border-color:var(--gold); }
+
+.pi-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; background:var(--surface2); border-radius:var(--radius); padding:10px 14px; }
+.pi-color { width:18px; height:18px; border-radius:50%; flex-shrink:0; }
+.pi-name-input { flex:1; background:transparent; border:1px solid var(--border); border-radius:6px; padding:8px 10px; color:var(--text); font-family:var(--font-body); font-size:14px; outline:none; transition:border-color .2s; }
+.pi-name-input:focus { border-color:var(--gold); }
+.pi-token-nav { display:flex; align-items:center; gap:6px; }
+.pi-arrow { width:28px; height:28px; border-radius:50%; border:1px solid var(--border); background:transparent; color:var(--text); cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+.pi-arrow:hover { border-color:var(--gold); color:var(--gold); }
+.pi-token-label { min-width:90px; font-weight:600; font-size:13px; color:var(--gold); }
+
+.sel-token-preview { margin:20px auto 24px; display:flex; flex-direction:column; align-items:center; }
+#token-preview-canvas { border-radius:50%; border:3px solid var(--gold); background:radial-gradient(circle, #1c2433, #0a0e14); }
+.preview-name { margin-top:10px; font-weight:700; font-size:18px; color:var(--gold); }
+.preview-desc { color:var(--muted); font-size:12px; margin-top:2px; }
+
+.btn-start { display:inline-block; padding:14px 48px; border:none; border-radius:var(--radius); background:var(--red); color:#fff; font-family:var(--font-dis); font-size:20px; font-weight:700; letter-spacing:3px; cursor:pointer; transition:all .25s; box-shadow:0 4px 20px rgba(196,30,58,.4); }
+.btn-start:hover { transform:translateY(-2px); box-shadow:0 6px 28px rgba(196,30,58,.6); }
+
+/* ============ GAME SCREEN ============ */
+#game-screen { position:fixed; inset:0; display:flex; }
+
+#canvas-wrap { flex:1; position:relative; overflow:hidden; }
+#game-canvas { display:block; width:100%; height:100%; }
+
+#turn-banner { position:absolute; top:12px; left:50%; transform:translateX(-50%); background:rgba(20,26,36,.88); border:1px solid var(--gold); border-radius:var(--radius); padding:8px 24px; font-weight:700; font-size:15px; white-space:nowrap; backdrop-filter:blur(8px); pointer-events:none; z-index:5; }
+#turn-name { color:var(--gold); }
+
+/* ============ HUD PANEL ============ */
+#hud { width:310px; flex-shrink:0; background:var(--surface); border-left:1px solid var(--border); overflow-y:auto; display:flex; flex-direction:column; gap:0; }
+
+#hud-current { padding:16px; border-bottom:1px solid var(--border); }
+.hud-player-header { display:flex; align-items:center; gap:10px; }
+.hud-player-header .pi-color { width:24px; height:24px; border-radius:50%; }
+.hud-player-header .hud-pname { font-size:18px; font-weight:700; line-height:1.2; }
+.hud-player-header .hud-ptoken { color:var(--muted); font-size:12px; opacity:0.8; }
+.hud-balance { margin-top:8px; font-size:26px; font-weight:700; color:var(--gold); font-family:var(--font-dis); line-height:1.2; }
+
+.hud-section-title { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--muted); padding:12px 16px 6px; font-weight:700; }
+
+.dice-row { display:flex; justify-content:center; gap:12px; margin-bottom:10px; }
+.die-box { width:52px; height:52px; border-radius:10px; background:var(--surface2); border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:700; color:var(--text); transition:all .3s; }
+.die-box.rolling { animation:dieShake .15s infinite alternate; border-color:var(--gold); }
+@keyframes dieShake { from{transform:rotate(-5deg)} to{transform:rotate(5deg)} }
+
+.btn-action { display:block; width:100%; padding:10px; border:none; border-radius:6px; font-family:var(--font-body); font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; letter-spacing:1px; }
+.btn-action:disabled { opacity:.4; cursor:default; }
+.btn-roll   { background:var(--red); color:#fff; margin-top:4px; }
+.btn-roll:hover:not(:disabled) { background:#d42a4a; }
+.btn-buy    { background:var(--green); color:#fff; }
+.btn-buy:hover:not(:disabled) { background:#1fa85a; }
+.btn-auction{ background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+.btn-auction:hover:not(:disabled) { border-color:var(--gold); }
+.btn-pay    { background:var(--red); color:#fff; }
+.btn-trade  { background:var(--gold); color:#000; }
+.btn-build  { background:#2a7a3a; color:#fff; }
+.btn-mortgage { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+.btn-end    { background:var(--border); color:var(--text); margin-top:6px; }
+.btn-ok     { background:var(--gold); color:#000; }
+.btn-start-game { background:var(--red); color:#fff; padding:14px 40px; font-size:18px; letter-spacing:2px; border:none; border-radius:var(--radius); cursor:pointer; font-family:var(--font-dis); }
+
+#hud-players { flex:1; overflow-y:auto; border-bottom:1px solid var(--border); }
+.pl-item {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 16px;
+    border-bottom:1px solid rgba(42,52,68,.4);
+    transition:all 0.2s ease;
+    position:relative;
+}
+.pl-item.current {
+    background:rgba(240,192,64,.08);
+    box-shadow:0 0 0 2px var(--gold);
+}
+.pl-item.bankrupt {
+    opacity:.35;
+    pointer-events:none;
+}
+.pl-dot {
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    flex-shrink:0;
+    box-shadow:0 2px 4px rgba(0,0,0,0.2);
+}
+.pl-info { flex:1; min-width:0; }
+.pl-name { font-weight:600; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pl-bal  { font-size:12px; color:var(--gold); }
+.pl-props { display:flex; gap:2px; flex-wrap:wrap; margin-top:2px; }
+.pl-prop-dot {
+    width:10px;
+    height:10px;
+    border-radius:2px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.2);
+    transition:transform 0.2s ease;
+}
+.pl-prop-dot:hover {
+    transform: scale(1.2);
+}
+
+#hud-actions { padding:10px 16px; display:flex; flex-direction:column; gap:6px; border-bottom:1px solid var(--border); }
+
+#hud-log { flex:1; min-height:0; overflow-y:auto; }
+#log-content { padding:6px 16px 12px; font-size:12px; color:var(--muted); line-height:1.6; max-height:200px; overflow-y:auto; }
+.log-line { border-bottom:1px solid rgba(42,52,68,.3); padding:3px 0; }
+
+.modal-overlay { position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,.65); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; }
+.modal-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px 32px; max-width:480px; width:92vw; max-height:85vh; overflow-y:auto; box-shadow:0 16px 48px rgba(0,0,0,.5); animation:modalIn .25s ease; }
+@keyframes modalIn { from{opacity:0;transform:scale(.92) translateY(12px)} to{opacity:1;transform:none} }
+
+.deed-card { text-align:center; }
+#deed-band { height:48px; border-radius:8px 8px 0 0; margin:-28px -32px 16px; }
+#deed-name { font-family:var(--font-dis); font-size:28px; }
+#deed-sub { color:var(--muted); font-size:13px; margin-bottom:12px; }
+#deed-rent-table { text-align:left; font-size:13px; margin:12px auto; max-width:280px; }
+#deed-price { font-size:22px; font-weight:700; color:var(--gold); margin:12px 0; }
+.deed-actions { display:flex; gap:10px; justify-content:center; margin-top:16px; }
+.deed-actions .btn-action { width:auto; padding:10px 28px; }
+
+.card-popup { text-align:center; }
+#card-type-badge { display:inline-block; padding:4px 16px; border-radius:20px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:2px; margin-bottom:16px; }
+#card-type-badge.chance { background:#e67e22; color:#fff; }
+#card-type-badge.community { background:#2980b9; color:#fff; }
+#card-text { font-size:16px; line-height:1.6; margin-bottom:20px; }
+
+.auction-card { text-align:center; }
+.auction-info { display:flex; justify-content:center; gap:24px; margin:12px 0; font-size:14px; }
+.auction-controls { display:flex; gap:8px; justify-content:center; align-items:center; margin-top:12px; }
+.auction-controls input { width:120px; padding:10px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:16px; text-align:center; font-family:var(--font-body); }
+
+.trade-card { max-width:600px; }
+.trade-cols { display:flex; gap:16px; margin:16px 0; }
+.trade-col { flex:1; background:var(--surface2); border-radius:var(--radius); padding:12px; }
+.trade-col h3 { font-size:14px; margin-bottom:8px; color:var(--gold); }
+.trade-props { max-height:200px; overflow-y:auto; }
+.trade-prop-row { display:flex; align-items:center; gap:6px; padding:4px 0; }
+.trade-prop-row input { accent-color:var(--gold); }
+.trade-actions { display:flex; gap:10px; justify-content:center; margin-top:16px; }
+
+.mort-card { max-width:500px; }
+.mort-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid rgba(42,52,68,.4); }
+.mort-dot { width:16px; height:16px; border-radius:4px; flex-shrink:0; }
+.mort-name { flex:1; font-size:14px; }
+.mort-status { font-size:12px; color:var(--muted); margin-right:8px; }
+.mort-btn { padding:6px 14px; border:none; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; transition:all .2s; }
+.mort-btn.mortgage { background:var(--red); color:#fff; }
+.mort-btn.unmortgage { background:var(--green); color:#fff; }
+
+.jail-card { text-align:center; }
+.jail-actions { display:flex; flex-direction:column; gap:8px; margin-top:16px; }
+
+.build-card { max-width:500px; }
+.build-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid rgba(42,52,68,.4); }
+.build-dot { width:16px; height:16px; border-radius:4px; flex-shrink:0; }
+.build-name { flex:1; font-size:14px; }
+.build-houses { font-size:13px; color:var(--muted); min-width:80px; text-align:center; }
+.build-btns { display:flex; gap:4px; }
+.build-btn { width:30px; height:30px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+.build-btn:hover:not(:disabled) { border-color:var(--gold); color:var(--gold); }
+.build-btn:disabled { opacity:.3; cursor:default; }
+
+.msg-card { text-align:center; }
+.msg-card p { font-size:16px; line-height:1.6; margin-bottom:20px; }
+
+.over-card { text-align:center; }
+.over-card h1 { font-family:var(--font-dis); color:var(--gold); font-size:36px; margin-bottom:12px; }
+.over-card h2 { font-size:28px; color:var(--red); margin-bottom:8px; }
+
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--muted); }
+
+@media (max-width:900px) {
+    #hud { width:260px; }
+    .sel-container { padding:24px 16px; }
+    .sel-title { font-size:36px; }
+}

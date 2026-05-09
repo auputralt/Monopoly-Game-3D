@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monopoly Indonesia 3D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ CHARACTER SELECTION ============ -->
+<div id="selection-screen">
+    <div class="sel-bg-pattern"></div>
+    <div class="sel-container">
+        <div class="sel-header">
+            <h1 class="sel-title">MONOPOLY</h1>
+            <h2 class="sel-subtitle">I N D O N E S I A</h2>
+            <p class="sel-tagline">Keliling Nusantara dalam papan permainan 3D</p>
+        </div>
+
+        <div class="sel-count-row">
+            <span class="sel-label">Jumlah Pemain</span>
+            <div class="count-btns" id="count-btns">
+                <button class="count-btn" data-n="2">2</button>
+                <button class="count-btn" data-n="3">3</button>
+                <button class="count-btn active" data-n="4">4</button>
+                <button class="count-btn" data-n="5">5</button>
+                <button class="count-btn" data-n="6">6</button>
+            </div>
+        </div>
+
+        <div id="player-inputs"></div>
+
+        <div class="sel-token-preview">
+            <canvas id="token-preview-canvas" width="220" height="220"></canvas>
+            <div id="preview-token-name" class="preview-name"></div>
+            <div id="preview-token-desc" class="preview-desc"></div>
+        </div>
+
+        <button id="start-btn" class="btn-start">MULAI PERMAINAN</button>
+    </div>
+</div>
+
+<!-- ============ GAME SCREEN ============ -->
+<div id="game-screen" style="display:none">
+    <div id="canvas-wrap">
+        <canvas id="game-canvas"></canvas>
+        <div id="turn-banner">
+            <span id="turn-name"></span><span id="turn-label"> — Giliran Anda</span>
+        </div>
+    </div>
+
+    <div id="hud">
+        <div id="hud-current">
+            <div class="hud-player-header" id="hud-header"></div>
+            <div class="hud-balance" id="hud-balance"></div>
+        </div>
+
+        <div id="hud-dice-area">
+            <div class="dice-row">
+                <div class="die-box" id="die1-box">?</div>
+                <div class="die-box" id="die2-box">?</div>
+            </div>
+            <button id="roll-btn" class="btn-action btn-roll">LEMPAR DADU</button>
+        </div>
+
+        <div id="hud-players">
+            <h3 class="hud-section-title">Pemain</h3>
+            <div id="players-list"></div>
+        </div>
+
+        <div id="hud-actions">
+            <button id="build-btn" class="btn-action btn-build" style="display:none">BANGUN RUMAH</button>
+            <button id="trade-btn" class="btn-action btn-trade" style="display:none">TUKAR PROPERTI</button>
+            <button id="mortgage-btn" class="btn-action btn-mortgage" style="display:none">GADAI / TEBUS</button>
+            <button id="end-btn" class="btn-action btn-end" style="display:none">AKHIR GILIRAN</button>
+        </div>
+
+        <div id="hud-log">
+            <h3 class="hud-section-title">Log</h3>
+            <div id="log-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div id="prop-modal" class="modal-overlay" style="display:none">
+    <div class="modal-card deed-card">
+        <div id="deed-band"></div>
+        <h2 id="deed-name"></h2>
+        <p id="deed-sub"></p>
+        <div id="deed-rent-table"></div>
+        <div id="deed-price"></div>
+        <div class="deed-actions">
+            <button id="deed-buy" class="btn-action btn-buy">BELI</button>
+            <button id="deed-auction" class="btn-action btn-auction">LELANG</button>
+            <button id="deed-pay" class="btn-action btn-pay" style="display:none">BAYAR SEWA</button>
+            <button id="deed-ok" class="btn-action btn-ok" style="display:none">OK</button>
+        </div>
+    </div>
+</div>
+
+<div id="card-modal" class="modal-overlay" style="display:none">
+    <div class="modal-card card-popup">
+        <div id="card-type-badge"></div>
+        <p id="card-text"></p>
+        <button id="card-ok" class="btn-action btn-ok">OK</button>
+    </div>
+</div>
+
+<div id="auction-modal" class="modal-overlay" style="display:none">
+    <div class="modal-card auction-card">
+        <h2>LELANG</h2>
+        <p id="auction-prop-name"></p>
+        <div class="auction-info">
+            <span>Tertinggi: <strong id="auction-high-bid">Rp 0</strong></span>
+            <span>Penawar: <strong id="auction-high-bidder">-</strong></span>
+        </div>
+        <p id="auction-turn-label"></p>
+        <div class="auction-controls">
+            <input type="number" id="auction-input" min="100" step="100" value="100">
+            <button id="auction-bid-btn" class="btn-action btn-buy">TAWAR</button>
+            <button id="auction-pass-btn" class="btn-action btn-auction">LEWATI</button>
+        </div>
+    </div>
+</div>
+
+<div id="trade-modal" class="modal-overlay" style="display:none">
+    <div class="modal-card trade-card">
+        <h2>TUKAR PROPERTI</h2>
+        <div class="trade-cols">
+            <div class="trade-col">
+                <h3 id="trade-left-name"></h3>
+                <div id="trade-left-props" class="trade-props"></div>
+                <label>Uang: <input type="number" id="trade-left-cash" value="0" min="0" step="100"></label>
+            </div>
+            <div class="trade-col">
+                <select id="trade-partner"></select>
+                <div id="trade-right-props" class="trade-props"></div>
+                <label>Uang: <input type="number" id="trade-right-cash" value="0" min="0" step="100"></label>
+            </div>
+        </div>
+        <div class="trade-actions">
+            <button id="trade-confirm" class="btn-action btn-buy">TUKAR</button>
+            <button id="trade-cancel" class="btn-action btn-auction">BATAL</button>
+        </div>
+    </div>
+</div>
+
+<div id="mort-modal" class="modal-overlay" style="display:none">
+    <div class="modal-card mort-card">
+        <h2>GADAI / TEBUS PROPERTI</h2>
+        <div id="mort-list"></div>
+        <button id="mort-close" class="btn-action btn-ok">TUTUP</button>
+    </div>
+</div>
+
+<div id="jail-modal" class="modal-overlay" style="display:none">
+    <div class="modal-card jail-card">
+        <h2>ANDA DI PENJARA!</h2>
+        <p id="jail-turns-info"></p>
+        <div class="jail-actions">
+            <button id="jail-pay" class="btn-action btn-buy">Bayar Rp 500</button>
+            <button id="jail-card" class="btn-action btn-trade" style="display:none">Kartu Bebas Penjara</button>
+            <button id="jail-roll" class="btn-action btn-roll">Lempar Dadu (Coba Double)</button>
+        </div>
+    </div>
+</div>
+
+<div id="msg-modal" class="modal-overlay" style="display:none">
+    <div class="modal-card msg-card">
+        <p id="msg-text"></p>
+        <button id="msg-ok" class="btn-action btn-ok">OK</button>
+    </div>
+</div>
+
+<div id="over-modal" class="modal-overlay" style="display:none">
+    <div class="modal-card over-card">
+        <h1>PERMAINAN SELESAI!</h1>
+        <h2 id="winner-name"></h2>
+        <p>adalah pemenangnya!</p>
+        <button id="restart-btn" class="btn-action btn-start-game">MAIN LAGI</button>
+    </div>
+</div>
+
+<div id="build-modal" class="modal-overlay" style="display:none">
+    <div class="modal-card build-card">
+        <h2>BANGUN RUMAH / HOTEL</h2>
+        <div id="build-list"></div>
+        <button id="build-close" class="btn-action btn-ok">TUTUP</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="js/board.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/players.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
