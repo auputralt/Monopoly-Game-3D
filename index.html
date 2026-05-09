@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<audio id="bg-music" loop preload="auto">
+  <source src="Asset/The_Dealer_s_Gambit.mp3" type="audio/mpeg">
+</audio>
 
 <!-- ============ CHARACTER SELECTION ============ -->
 <div id="selection-screen">
@@ -193,6 +196,16 @@
     </div>
 </div>
 
+<script>
+(function(){
+  var bg=document.getElementById('bg-music');
+  bg.volume=0.4;
+  function play(){bg.play().catch(function(){});}
+  document.addEventListener('click',play,{once:true});
+  document.addEventListener('keydown',play,{once:true});
+  play();
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script src="js/board.js"></script>
